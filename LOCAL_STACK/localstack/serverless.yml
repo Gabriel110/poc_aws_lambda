@@ -28,10 +28,6 @@ provider:
         - dynamodb:DescribeStream
         - dynamodb:ListStreams
       Resource: arn:aws:dynamodb:us-east-1:*:*
-    - Effect: Allow
-      Action: 
-        - logs
-      Resource: arn:aws:logs:*:*:*
       
 resources:
   Resources:

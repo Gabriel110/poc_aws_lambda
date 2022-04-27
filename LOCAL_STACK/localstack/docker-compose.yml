@@ -3,11 +3,11 @@ version: '3.1'
 services: 
   localstack:
     image: localstack/localstack:latest
-    environment: 
+    environment:
       - AWS_DEFAULT_REGION=us-east-1
       - EDGE_PORT=4566
       - DEBUG=1
-      - SERVICES=lambda,s3,cloudformation,sts,apigateway,iam,route53,dynamodb,kinesis,cloudwatch,sts
+      - SERVICES=lambda,s3,cloudformation,sts,dynamodb,iam
     ports: 
       - '4566-4597:4566-4597'
     volumes: 
