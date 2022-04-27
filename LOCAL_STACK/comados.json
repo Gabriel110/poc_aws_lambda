@@ -1,0 +1,5 @@
+{
+  "Descricao": "aws --endpoint-url=http://localhost:4566 dynamodb describe-table --table-name my_table",
+  "adiciona":"aws --endpoint-url=http://localhost:4566 dynamodb put-item --table-name my_table --item '{\"id\":{\"S\":\"1\"},\"Nome\": {\"S\": \"Gabriel\"}}'",
+  "altera":""
+}
