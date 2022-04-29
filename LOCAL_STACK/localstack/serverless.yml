@@ -4,6 +4,7 @@ frameworkVersion: '3'
 
 plugins:
   - serverless-localstack
+  # - serverless-localstack-sns
 
 custom:
   localstack:
@@ -12,6 +13,10 @@ custom:
      - local
      - dev
     endpointFile: localstack_endpoints.json
+  # localstack-sns:
+  #   endpoint: http://localhost:4566
+  #   port: 4002
+  #   debug: true
 
 provider:
   name: aws
