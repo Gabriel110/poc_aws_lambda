@@ -1,0 +1,29 @@
+{
+  "SnsEvent":{
+    "orgId": "gs1",
+    "tenantId": "3545cf5b-ada3-47d3-a514-91e9c48a6f71",
+    "productId": "3545cf5b-ada3-47d3-a514-91e9c48a6f71",
+    "domain": "gabriel",
+    "eventType": "cancellation_failure",
+    "schema": "1.0",
+    "timestamp": "DateTimeUtils.getTimestamp()" ,
+    "sendTimestamp": "DateTimeUtils.getTimestamp()",
+    "eventId": "UUID.randomUUID().toString()",
+    "data": "PushNotificationEvent"
+  },
+  "PushNotificationEvent":{
+    "clientId": "record['dynamodb']['NewImage']['client_id']['S']",
+    "eventId": "enum.evtPUSH-ITI-ContestacaoNova",
+    "contextVariables": "PushContextVariables"
+  },
+  "PushContextVariables":[
+    {
+      "key": "chargebackid",
+      "value": "record['dynamodb']['NewImage']['chargeback_id']['S']"
+    }
+  ],
+  "Anotação":{
+    "cc":"criar enum com todos os eventos"
+  }
+
+}

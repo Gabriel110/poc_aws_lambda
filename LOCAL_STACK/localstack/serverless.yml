@@ -54,7 +54,7 @@ resources:
 
 functions:
   hello:
-    handler: handler.handler
+    handler: src/handler.handler
     events:
       - stream:
           type: dynamodb
