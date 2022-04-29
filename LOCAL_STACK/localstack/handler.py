@@ -10,7 +10,6 @@ def handler(event, context):
 
   teste()
 
-  LOGGER.info('CHAMANDO')
   # for record in event['Records']:
   #   LOGGER.info(record['dynamodb'])
   #   LOGGER.info(record['eventName'])
@@ -26,31 +25,20 @@ def handler(event, context):
 
 def teste():
   message = {"foo": "bar"}
+  sns_url = 'http://%s:4566' % os.environ['LOCALSTACK_HOSTNAME']
   client = boto3.client('sns',
     aws_access_key_id="test",
     aws_secret_access_key="test",
-    region_name="us-east-1"
+    region_name="us-east-1",
+    endpoint_url=sns_url
   )
-  arn = "arn:aws:sns:us-east-1:000000000000:test2-sns"
+  arn = "arn:aws:sns:us-east-1:000000000000:test-sns"
   response = client.publish(
       TargetArn=arn,
       Message=json.dumps(message),
       Subject='a short subject for your message',
       MessageStructure='json'
   )
+  LOGGER.info('ENVIANDO ...')
   LOGGER.info(response)
-
-def teste2():
-  message = {"foo": "bar"}
-  sqs_client = boto3.client('sqs',
-    aws_access_key_id="iti",
-    aws_secret_access_key="iti",
-    region_name="us-east-1",
-    endpoint_url="http://localhost:4566"
-  )
-  response = sqs_client.send_message(
-    QueueUrl = "http://localhost:4566/000000000000/gabriel",
-    MessageBody=json.dumps(message)
-  )
-
-  LOGGER.info(response)
+  LOGGER.info('ENVIADO!')
