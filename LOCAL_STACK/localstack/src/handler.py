@@ -10,41 +10,94 @@ LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
 
 
-def sns_event(clienteId, chargebackId):
-    ts = datetime.datetime.now().timestamp()
-    uuids =  uuid.uuid4().__str__()
-    return {
-        "SnsEvent": {
-            "orgId": "gs1",
-            "tenantId": "3545cf5b-ada3-47d3-a514-91e9c48a6f71",
-            "productId": "3545cf5b-ada3-47d3-a514-91e9c48a6f71",
-            "domain": "gabriel",
-            "eventType": "cancellation_failure",
-            "schema": "1.0",
-            "timestamp": ts,
-            "sendTimestamp": ts,
-            "eventId": uuids,
-            "data": "PushNotificationEvent"
-        },
-        "PushNotificationEvent": {
-            "clientId": clienteId,
-            "eventId": "enum.evtPUSH-ITI-ContestacaoNova",
-            "contextVariables": "PushContextVariables"
-        },
-        "PushContextVariables": [
-            {
-                "key": "chargebackid",
-                "value": chargebackId
+class PushContextVariables:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+
+    def toString(self):
+        return {
+            "key": self.key,
+            "value": self.value
+        }
+
+
+class PushNotificationEvent:
+    def __init__(self, clientId, eventId, pushContextVar):
+        self.clientId = clientId
+        self.eventId = eventId
+        self.pushContextVar = pushContextVar
+
+    def arrayToJson(self):
+        ctxVar = []
+        for i in self.pushContextVar:
+            ctxVar.append({"key": i.key, "value": i.value})
+        return ctxVar
+
+    def toString(self):
+        return {
+            "client_id": self.clientId,
+            "event_id": self.eventId,
+            "context_variables": self.arrayToJson()
+        }
+
+
+class SnsEvent:
+    def __init__(self, tenantId, productId, pushNotificationEvent):
+        self.orgId = "gs1"
+        self.tenantId = tenantId
+        self.productId = productId
+        self.eventType = "cancellation_failure"
+        self.schema = "1.0"
+        self.timestamp = datetime.datetime.now().timestamp()
+        self.sendTimestamp = datetime.datetime.now().timestamp()
+        self.eventId = uuid.uuid4().hex
+        self.data = pushNotificationEvent
+
+    def toString(self):
+        return {
+            "org_id": self.orgId,
+            "tenant_id": self.tenantId,
+            "product_id": self.productId,
+            "event_type": self.eventType,
+            "schema": self.schema,
+            "timestamp": self.timestamp,
+            "send_timestamp": self.sendTimestamp,
+            "event_id": self.eventId,
+            "data": self.data.toString()
+        }
+
+
+def class_to_json(sqs):
+    if isinstance(sqs, SnsEvent):
+        return {
+            'org_id': sqs.orgId,
+            'tenant_id': sqs.tenantId,
+            'product_id': sqs.productId,
+            'event_type': sqs.eventType,
+            'schema': sqs.schema,
+            'timestamp': sqs.timestamp,
+            'send_timestamp': sqs.sendTimestamp,
+            'event_id': sqs.eventId,
+            'data': {
+                'client_id': sqs.data.clientId,
+                'event_id': sqs.data.eventId,
+                'context_variables': sqs.data.toString()
             }
-        ]
-    }
+        }
+    raise TypeError(f'Object not valid')
 
 
 def handler(event, context):
     sns_url = 'http://%s:4566' % os.environ['LOCALSTACK_HOSTNAME']
     LOGGER.info("Url: %s.", sns_url)
+    pushContextVar = PushContextVariables('chargebackid', 'xxx')
+    pushContextVar1 = PushContextVariables('chargebackid', 'xxx1')
+    pushContextVar2 = PushContextVariables('chargebackid', 'xxx2')
+    pushNotificationEvent = PushNotificationEvent('019', 't1esww', [pushContextVar, pushContextVar1, pushContextVar2])
+    snsEvet = SnsEvent("gavsg", "ajjsjds", pushNotificationEvent)
 
-    sns_message = sns_event("cc", "xxx")
+    sns_message = snsEvet
     client = boto3.client('sns',
                           aws_access_key_id="test",
                           aws_secret_access_key="test",
@@ -68,7 +121,7 @@ def publish_message(client, message, arn):
     try:
         response = client.publish(
             TargetArn=arn,
-            Message=json.dumps({'default': json.dumps(message)}),
+            Message=json.dumps({'default': json.dumps(message, default=class_to_json)}),
             MessageStructure='json'
         )
         message_id = response['MessageId']
