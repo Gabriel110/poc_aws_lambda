@@ -1,91 +1,12 @@
+import json
 import logging
 import boto3
-import json
-from botocore.exceptions import ClientError
 import os
-import uuid
-import datetime
+from classes.classes import PushContextVariables, PushNotificationEvent, SnsEvent
+from localstack.src.classes.util import class_to_json, publish_message
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
-
-
-class PushContextVariables:
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-
-    def toString(self):
-        return {
-            "key": self.key,
-            "value": self.value
-        }
-
-
-class PushNotificationEvent:
-    def __init__(self, clientId, eventId, pushContextVar):
-        self.clientId = clientId
-        self.eventId = eventId
-        self.pushContextVar = pushContextVar
-
-    def arrayToJson(self):
-        ctxVar = []
-        for i in self.pushContextVar:
-            ctxVar.append({"key": i.key, "value": i.value})
-        return ctxVar
-
-    def toString(self):
-        return {
-            "client_id": self.clientId,
-            "event_id": self.eventId,
-            "context_variables": self.arrayToJson()
-        }
-
-
-class SnsEvent:
-    def __init__(self, tenantId, productId, pushNotificationEvent):
-        self.orgId = "gs1"
-        self.tenantId = tenantId
-        self.productId = productId
-        self.eventType = "cancellation_failure"
-        self.schema = "1.0"
-        self.timestamp = datetime.datetime.now().timestamp()
-        self.sendTimestamp = datetime.datetime.now().timestamp()
-        self.eventId = uuid.uuid4().hex
-        self.data = pushNotificationEvent
-
-    def toString(self):
-        return {
-            "org_id": self.orgId,
-            "tenant_id": self.tenantId,
-            "product_id": self.productId,
-            "event_type": self.eventType,
-            "schema": self.schema,
-            "timestamp": self.timestamp,
-            "send_timestamp": self.sendTimestamp,
-            "event_id": self.eventId,
-            "data": self.data.toString()
-        }
-
-
-def class_to_json(sqs):
-    if isinstance(sqs, SnsEvent):
-        return {
-            'org_id': sqs.orgId,
-            'tenant_id': sqs.tenantId,
-            'product_id': sqs.productId,
-            'event_type': sqs.eventType,
-            'schema': sqs.schema,
-            'timestamp': sqs.timestamp,
-            'send_timestamp': sqs.sendTimestamp,
-            'event_id': sqs.eventId,
-            'data': {
-                'client_id': sqs.data.clientId,
-                'event_id': sqs.data.eventId,
-                'context_variables': sqs.data.toString()
-            }
-        }
-    raise TypeError(f'Object not valid')
 
 
 def handler(event, context):
@@ -107,7 +28,8 @@ def handler(event, context):
     arn = "arn:aws:sns:us-east-1:000000000000:test-sns"
 
     publish_message(client, sns_message, arn)
-    LOGGER.info(event)
+    LOGGER.info(sns_message)
+    print(json.dumps(sns_message, default=class_to_json))
 
     # for record in event['Records']:
     #   LOGGER.info(record['dynamodb'])
@@ -117,19 +39,6 @@ def handler(event, context):
     # return event
 
 
-def publish_message(client, message, arn):
-    try:
-        response = client.publish(
-            TargetArn=arn,
-            Message=json.dumps({'default': json.dumps(message, default=class_to_json)}),
-            MessageStructure='json'
-        )
-        message_id = response['MessageId']
-        LOGGER.info('ENVIANDO ...')
-        LOGGER.info("Id da menssgaem %s.", message_id)
-        LOGGER.info('ENVIADO!')
-    except ClientError:
-        LOGGER.exception("Couldn't publish message to topic %s.", client.arn)
-        raise
-    else:
-        return message_id
+if __name__ == "__main__":
+    handler('', '')
+

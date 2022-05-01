@@ -15,6 +15,4 @@ services:
     volumes: 
       - "${TEMPDIR:-/tmp/localstack}:/temp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock" 
-    command: "aws configure set aws_access_key_id test
-      &&  aws configure set aws_secret_access_key test
-      && aws configure set region us-east-1"
+    command: "chmod 644 handler.py"

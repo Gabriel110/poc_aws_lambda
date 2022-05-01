@@ -4,6 +4,7 @@ frameworkVersion: '3'
 
 plugins:
   - serverless-localstack
+  - serverless-python-requirements
   # - serverless-localstack-sns
 
 custom:
@@ -13,6 +14,8 @@ custom:
      - local
      - dev
     endpointFile: localstack_endpoints.json
+  pythonRequirements:
+    dockerizePip: true
   # localstack-sns:
   #   endpoint: http://localhost:4566
   #   port: 4002

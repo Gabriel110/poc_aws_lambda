@@ -3,6 +3,7 @@
     "serverless-localstack": "^0.4.35"
   },
   "dependencies": {
-    "serverless-localstack-sns": "^0.1.2"
+    "serverless-localstack-sns": "^0.1.2",
+    "serverless-python-requirements": "^5.4.0"
   }
 }
