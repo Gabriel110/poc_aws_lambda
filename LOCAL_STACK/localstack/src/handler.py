@@ -91,6 +91,7 @@ def class_to_json(sqs):
 def handler(event, context):
     sns_url = 'http://%s:4566' % os.environ['LOCALSTACK_HOSTNAME']
     LOGGER.info("Url: %s.", sns_url)
+    LOGGER.info(context)
 
     client = boto3.client('sns',
                           aws_access_key_id="test",
