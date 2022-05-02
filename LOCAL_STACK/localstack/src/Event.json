@@ -10,7 +10,7 @@
     "sendTimestamp": "DateTimeUtils.getTimestamp()",
     "eventId": "UUID.randomUUID().toString()",
     "data": {
-      "clientId": "record['dynamodb']['NewImage']['client_id']['S']",
+      "clientId": "record['dynamodb']['NewImage']['']['S']",
       "eventId": "enum.evtPUSH-ITI-ContestacaoNova",
       "contextVariables": [
         {

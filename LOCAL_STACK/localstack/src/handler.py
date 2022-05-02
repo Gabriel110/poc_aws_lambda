@@ -91,13 +91,7 @@ def class_to_json(sqs):
 def handler(event, context):
     sns_url = 'http://%s:4566' % os.environ['LOCALSTACK_HOSTNAME']
     LOGGER.info("Url: %s.", sns_url)
-    pushContextVar = PushContextVariables('chargebackid', 'xxx')
-    pushContextVar1 = PushContextVariables('chargebackid', 'xxx1')
-    pushContextVar2 = PushContextVariables('chargebackid', 'xxx2')
-    pushNotificationEvent = PushNotificationEvent('019', 't1esww', [pushContextVar, pushContextVar1, pushContextVar2])
-    snsEvet = SnsEvent("gavsg", "ajjsjds", pushNotificationEvent)
 
-    sns_message = snsEvet
     client = boto3.client('sns',
                           aws_access_key_id="test",
                           aws_secret_access_key="test",
@@ -105,16 +99,65 @@ def handler(event, context):
                           endpoint_url=sns_url
                           )
     arn = "arn:aws:sns:us-east-1:000000000000:test-sns"
+    for record in event['Records']:
 
-    publish_message(client, sns_message, arn)
+        eventInsert = record['eventName'] == 'INSERT'
+        eventModify = record['eventName'] == 'MODIFY'
+        internalNewProcess = record['dynamodb']['NewImage']['internal_process_status_code']['N']
+        LOGGER.info('Event  %s', record['eventName'])
+        LOGGER.info('Evento insert %s', eventInsert)
+        LOGGER.info('Evento modify  %s', eventModify)
+        LOGGER.info('Novo dados  %s', internalNewProcess)
+
+        if eventInsert and internalNewProcess == '0':
+            LOGGER.info('Push notification internal process status code 0')
+            sns_message = generate_sns_message("xx0", "yy0", record['dynamodb']['NewImage']['client_id']['S'],
+                                               "evtPUSH-ITI-ContestacaoNova",
+                                               record['dynamodb']['NewImage']['chargeback_id']['S'])
+            publish_message(client, sns_message, arn)
+        elif eventModify:
+            internalOldProcess = record['dynamodb']['OldImage']['internal_process_status_code']['N']
+            internalProcessEqual = internalOldProcess == internalNewProcess
+            internalOldDefense = record['dynamodb']['OldImage']['internal_actual_defense_document_status_code']['N']
+            internalNewDefense = record['dynamodb']['NewImage']['internal_actual_defense_document_status_code']['N']
+            internalDefenseEqual = internalNewDefense == internalOldDefense
+            if not internalProcessEqual:
+                if internalNewProcess == '10':
+                    LOGGER.info('Push notification internal process status code 10')
+                    sns_message = generate_sns_message("xx10", "yy10", record['dynamodb']['NewImage']['client_id']['S'],
+                                                       "evtPUSH-ITI-10",
+                                                       record['dynamodb']['NewImage']['chargeback_id']['S'])
+                    publish_message(client, sns_message, arn)
+                elif internalNewProcess == '20':
+                    LOGGER.info('Push notification internal process status code 20')
+                    sns_message = generate_sns_message("xx20", "yy20", record['dynamodb']['NewImage']['client_id']['S'],
+                                                       "evtPUSH-ITI-20",
+                                                       record['dynamodb']['NewImage']['chargeback_id']['S'])
+                    publish_message(client, sns_message, arn)
+                elif internalNewProcess == '30':
+                    LOGGER.info('Push notification internal process status code 30')
+                    sns_message = generate_sns_message("xx30", "yy30", record['dynamodb']['NewImage']['client_id']['S'],
+                                                       "evtPUSH-ITI-Contestacao30",
+                                                       record['dynamodb']['NewImage']['chargeback_id']['S'])
+                    publish_message(client, sns_message, arn)
+                else:
+                    LOGGER.info("No situation found for triggering the push")
+                if internalOldDefense != internalNewDefense and internalNewDefense == '13':
+                    LOGGER.info('Push notification internal actual defense document status code 13')
+                    sns_message = generate_sns_message("xx13", "yy13", record['dynamodb']['NewImage']['client_id']['S'],
+                                                       "evtPUSH-ITI-Contestacao13",
+                                                       record['dynamodb']['NewImage']['chargeback_id']['S'])
+                    publish_message(client, sns_message, arn)
+        else:
+            LOGGER.info("No situation found the push")
     LOGGER.info(event)
 
-    # for record in event['Records']:
-    #   LOGGER.info(record['dynamodb'])
-    #   LOGGER.info(record['eventName'])
-    #   LOGGER.info(record['dynamodb']['NewImage'])
-    #   LOGGER.info(record['dynamodb']['OldImage'])
-    # return event
+
+def generate_sns_message(tenantId, productId, clientId, eventId, value):
+    pushContextVar = PushContextVariables('chargebackid', value)
+    pushNotificationEvent = PushNotificationEvent(clientId, eventId, [pushContextVar])
+    snsMessage = SnsEvent(tenantId, productId, pushNotificationEvent)
+    return snsMessage
 
 
 def publish_message(client, message, arn):
