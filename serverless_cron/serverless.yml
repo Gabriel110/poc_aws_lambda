@@ -1,9 +1,18 @@
-service: serverless-cron
+service: cron
 
 frameworkVersion: '3'
 
 plugins:
   - serverless-localstack
+
+
+custom:
+  localstack:
+    debug: true
+    stages:
+     - local
+     - dev
+    endpointFile: localstack_endpoints.json
 
 provider:
   name: aws
@@ -20,14 +29,6 @@ provider:
         - dynamodb:DescribeStream
         - dynamodb:ListStreams
       Resource: arn:aws:dynamodb:us-east-1:*:*
-
-custom:
-  localstack:
-    debug: true
-    stages:
-     - local
-     - dev
-    endpointFile: localstack_endpoints.json
 
 resources:
   Resources:
@@ -48,10 +49,9 @@ resources:
           StreamViewType: NEW_AND_OLD_IMAGES
 
 functions:
-  handler:
-    handler: src/handler.hello
-
-#      - schedule: "cron(1 * * * *)"
-#          rate: rate(1 minute)
-#          enabled: true
-
+  handler_execute:
+    handler: src/handler.handler
+    events:
+      - http:
+          method: get
+          path: handler

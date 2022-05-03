@@ -7,7 +7,7 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - EDGE_PORT=4566
       - DEBUG=1
-      - SERVICES=lambda,s3,cloudformation,sts,dynamodb,iam,sns,sqs
+      - SERVICES=lambda,s3,cloudformation,sts,dynamodb,iam,sns,sqs,apigateway,route53cd ..
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
     ports:
