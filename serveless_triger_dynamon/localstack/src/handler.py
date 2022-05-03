@@ -10,16 +10,16 @@ from botocore.exceptions import ClientError
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
 
-sns_url = 'http://%s:4566' % os.environ['LOCALSTACK_HOSTNAME']
-LOGGER.info("Url: %s.", sns_url)
-
-client = boto3.client('sns',
-                      aws_access_key_id="test",
-                      aws_secret_access_key="test",
-                      region_name="us-east-1",
-                      endpoint_url=sns_url
-                      )
-# client = boto3.client('sns')
+# sns_url = 'http://%s:4566' % os.environ['LOCALSTACK_HOSTNAME']
+# LOGGER.info("Url: %s.", sns_url)
+#
+# client = boto3.client('sns',
+#                       aws_access_key_id="test",
+#                       aws_secret_access_key="test",
+#                       region_name="us-east-1",
+#                       endpoint_url=sns_url
+#                       )
+client = boto3.client('sns')
 arn = "arn:aws:sns:us-east-1:000000000000:test-sns"
 tenantId = "b507498202dc4051bbd4ffd363223707"
 productId = "b507498202dc4051bbd4ffd363223707"
@@ -27,6 +27,7 @@ productId = "b507498202dc4051bbd4ffd363223707"
 
 def handler(event, context):
     for record in event['Records']:
+        LOGGER.info(event)
         eventInsert = record['eventName'] == 'INSERT'
         eventModify = record['eventName'] == 'MODIFY'
         eventRemove = record['eventName'] == 'REMOVE'
