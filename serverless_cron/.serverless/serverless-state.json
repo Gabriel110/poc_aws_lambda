@@ -192,7 +192,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/cron/local/1651605029637-2022-05-03T19:10:29.637Z/cron.zip"
+                "S3Key": "serverless/cron/local/1651606481495-2022-05-03T19:34:41.495Z/cron.zip"
               },
               "Handler": "src/handler.handler",
               "Runtime": "python3.8",
@@ -210,14 +210,14 @@
               "HandlerUnderscoreexecuteLogGroup"
             ]
           },
-          "HandlerUnderscoreexecuteLambdaVersionPNVSVDvWj1RME43DL52Oeij4ElE9UvUO5LZqm3fYzmU": {
+          "HandlerUnderscoreexecuteLambdaVersionQLcFr6iuNANFZrtQXsCYyha4KIweyaMAsOlWgDX0BxQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "HandlerUnderscoreexecuteLambdaFunction"
               },
-              "CodeSha256": "R7bfqCvkwC6zbFkzz0aCVeJHsczcaNeRf0ejI3Ruz6U="
+              "CodeSha256": "/Wm2gJOM67Jz5BmQPU4H6ikwjC6Tq21eJXef3AFiiP0="
             }
           },
           "ApiGatewayRestApi": {
@@ -293,7 +293,7 @@
               "HandlerUnderscoreexecuteLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1651605026941": {
+          "ApiGatewayDeployment1651606478768": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -380,7 +380,7 @@
           "HandlerUnderscoreexecuteLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "HandlerUnderscoreexecuteLambdaVersionPNVSVDvWj1RME43DL52Oeij4ElE9UvUO5LZqm3fYzmU"
+              "Ref": "HandlerUnderscoreexecuteLambdaVersionQLcFr6iuNANFZrtQXsCYyha4KIweyaMAsOlWgDX0BxQ"
             },
             "Export": {
               "Name": "sls-cron-local-HandlerUnderscoreexecuteLambdaFunctionQualifiedArn"
@@ -530,7 +530,7 @@
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "HandlerUnderscoreexecuteLambdaVersionPNVSVDvWj1RME43DL52Oeij4ElE9UvUO5LZqm3fYzmU"
+        "versionLogicalId": "HandlerUnderscoreexecuteLambdaVersionQLcFr6iuNANFZrtQXsCYyha4KIweyaMAsOlWgDX0BxQ"
       }
     },
     "resources": {
@@ -589,7 +589,7 @@
     "artifact": "C:\\Users\\Gabriel\\Documents\\Dev\\poc_aws_lambda\\serverless_cron\\.serverless\\cron.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/cron/local/1651605029637-2022-05-03T19:10:29.637Z",
+    "artifactDirectoryName": "serverless/cron/local/1651606481495-2022-05-03T19:34:41.495Z",
     "artifact": "cron.zip"
   }
 }
