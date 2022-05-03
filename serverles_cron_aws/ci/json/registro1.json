@@ -1,0 +1,17 @@
+{
+  "id": {
+    "S": "1"
+  },
+  "internal_process_status_code": {
+    "N": "0"
+  },
+  "client_id": {
+    "S": "001"
+  },
+  "chargeback_id": {
+    "S": "d88c1fe5-f314-4dae-ac3c-9fde8604caa5"
+  },
+  "internal_actual_defense_document_status_code": {
+    "N": "0"
+  }
+}

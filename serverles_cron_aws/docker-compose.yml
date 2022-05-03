@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - EDGE_PORT=4566
+      - DEBUG=1
+      - SERVICES=lambda,s3,cloudformation,sts,dynamodb,iam,sns,sqs,apigateway,route53cd ..
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    ports:
+      - '4566-4597:4566-4597'
+    volumes:
+      - "${TEMPDIR:-/tmp/localstack}:/temp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
