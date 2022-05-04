@@ -4,3 +4,4 @@ aws --endpoint-url=http://localhost:4566 dynamodb put-item --table-name my_table
 aws --endpoint-url=http://localhost:4566 dynamodb put-item --table-name my_table --item  file://json/registro3.json
 aws --endpoint-url=http://localhost:4566 dynamodb put-item --table-name my_table --item  file://json/registro4.json
 aws --endpoint-url=http://localhost:4566 dynamodb put-item --table-name my_table --item  file://json/registro5.json
+
