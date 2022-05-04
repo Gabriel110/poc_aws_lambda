@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-serverless invoke local -f handler
+cd ..
+cd src
+serverless invoke local -f hello
