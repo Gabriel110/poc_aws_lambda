@@ -38,22 +38,12 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: internal_process_status_code
-            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        GlobalSecondaryIndexes:
-          - IndexName: status_code
-            KeySchema:
-              - AttributeName: internal_process_status_code
-                KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-        StreamSpecification:
-          StreamViewType: NEW_AND_OLD_IMAGES
-
 
 functions:
   hello:
