@@ -28,9 +28,11 @@ def hello(event, context):
     data = response['Items']
 
     for i in data:
-        dif = string_to_data_day_dif(i['attendance_period_end_data'])
-        LOGGER.info(dif)
-        if dif >= 2:
+        dif_date = diff_days(i['attendance_period_end_data'])
+        isZeroOrNineNIne = i['internal_process_status_code'] == 0 or i['internal_process_status_code'] == 99
+        LOGGER.info("Diferença entre duas datas %s", dif_date)
+        LOGGER.info("E 99 ou 0 %s", isZeroOrNineNIne)
+        if dif_date == 2 and isZeroOrNineNIne:
             contextVariable = [{"chave": 'chargebackid', "valor": i['chargeback_id']}]
             send_push(i['client_id'], "xxx", contextVariable)
             LOGGER.info("Data %s, context %s", i['attendance_period_end_data'], contextVariable)
@@ -43,10 +45,10 @@ def hello(event, context):
     return response
 
 
-def string_to_data_day_dif(string):
-    now = datetime.today()
-    chargeback_data = datetime.strptime(string, '%Y-%m-%d').date()
-    return now.day - chargeback_data.day
+def diff_days(date):
+    today = datetime.now()
+    d2 = datetime.strptime(date, "%Y-%m-%d")
+    return abs((today - d2).days)
 
 
 def send_push(idCliente, idEvent, contextVariable):
