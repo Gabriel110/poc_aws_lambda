@@ -1,0 +1,20 @@
+{
+  "id": {
+    "S": "5"
+  },
+  "internal_process_status_code": {
+    "N": "1"
+  },
+  "client_id": {
+    "S": "005"
+  },
+  "chargeback_id": {
+    "S": "67aaa499-8bcf-4e99-b70c-94139e915ec9"
+  },
+  "internal_actual_defense_document_status_code": {
+    "N": "0"
+  },
+  "attendance_period_end_data": {
+    "S": "2022-05-04"
+  }
+}
