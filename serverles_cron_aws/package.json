@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "serverless-localstack": "^0.4.35"
-  }
-}
