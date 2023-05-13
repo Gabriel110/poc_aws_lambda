@@ -1,5 +1,5 @@
 resource "aws_iam_role" "lambda_assume_role" {
-  name               = "lambda-dynamodb-role"
+  name               = "lambda-process-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

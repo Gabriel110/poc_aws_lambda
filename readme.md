@@ -6,7 +6,7 @@
 - terraform apply -destroy --auto-approve 
 
 ## Comando aws
-- aws lambda --endpoint http://localhost:4566 get-function --function-name gabriel
+- aws lambda --endpoint http://localhost:4566 get-function --function-name lambda-process
 - aws lambda invoke --function-name gabriel --endpoint-url=http://localhost:4566 --payload 'eyJxdWFudGl0eSI6IDJ9' output.txt
 - aws --endpoint-url=http://localhost:4566 lambda list-functions
 - aws --endpoint-url=http://localhost:4566 sns list-subscriptions

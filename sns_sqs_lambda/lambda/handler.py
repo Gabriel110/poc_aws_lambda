@@ -4,5 +4,6 @@ LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
 
 def handler(event, context):
-  LOGGER.info(event)
+  for record in event['Records']:
+    LOGGER.info(record['body'])
   return event

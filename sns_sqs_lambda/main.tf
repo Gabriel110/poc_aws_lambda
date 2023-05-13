@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  function_name    = "gabriel"
+  function_name    = "lambda-process"
   filename         = data.archive_file.lambda_zip_file.output_path
   source_code_hash = data.archive_file.lambda_zip_file.output_base64sha256
   handler          = "handler.handler"
@@ -52,6 +52,10 @@ data "archive_file" "lambda_zip_file" {
   type        = "zip"
 }
 
-
-
-
+resource "aws_lambda_event_source_mapping" "event_source_mapping" {
+  event_source_arn  = aws_sqs_queue.queue.arn
+  function_name     = aws_lambda_function.lambda_function.arn
+  enabled           = true
+  batch_size        = 1
+  starting_position = "LATEST"
+}
