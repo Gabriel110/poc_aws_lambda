@@ -14,3 +14,7 @@
   - aws --endpoint-url=http://localhost:4566 sqs list-queues
   - aws --endpoint-url=http://localhost:4566 sqs send-message --queue-url http://localhost:4566/000000000000/sqs-lambda --message-body 'Welcome to SQS queue by Gacodes'
   - aws --endpoint-url=http://localhost:4566 sqs receive-message --queue-url http://localhost:4566/000000000000/sqs-lambda
+
+## Diagrama do projetos
+
+<div align="center"><img src="./mk/diagrama.png" width="97%" /></div>
