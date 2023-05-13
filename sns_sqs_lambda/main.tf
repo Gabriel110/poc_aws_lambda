@@ -32,8 +32,18 @@ resource "aws_sns_topic" "sns_topic" {
   name      =   "sns-lambda"
 }
 
+resource "aws_sns_topic" "sns_topic_dois" {
+  name      =   "sns-lambda-dois"
+}
+
 resource "aws_sqs_queue" "queue" {
   name      =   "sqs-lambda"
+  receive_wait_time_seconds  = 20
+  message_retention_seconds  = 18400
+}
+
+resource "aws_sqs_queue" "queue_dois" {
+  name      =   "sqs-lambda-dois"
   receive_wait_time_seconds  = 20
   message_retention_seconds  = 18400
 }
@@ -43,6 +53,13 @@ resource "aws_sns_topic_subscription" "queue_subscription" {
   raw_message_delivery = true
   topic_arn            = aws_sns_topic.sns_topic.arn
   endpoint             = aws_sqs_queue.queue.arn
+}
+
+resource "aws_sns_topic_subscription" "queue_subscription_dois" {
+  protocol             = "sqs"
+  raw_message_delivery = true
+  topic_arn            = aws_sns_topic.sns_topic_dois.arn
+  endpoint             = aws_sqs_queue.queue_dois.arn
 }
 
 data "archive_file" "lambda_zip_file" {
