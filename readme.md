@@ -17,4 +17,4 @@
 
 ## Diagrama do projetos
 
-<div align="center"><img src="./mk/Diagrama.png" width="97%" /></div>
+<div align="center"><img src="./mk/diagrama.png" width="97%" /></div>
