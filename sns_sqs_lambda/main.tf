@@ -63,6 +63,7 @@ resource "aws_sns_topic_subscription" "queue_subscription_dois" {
 }
 
 data "archive_file" "lambda_zip_file" {
+  depends_on  = [null_resource.install_python_dependencies]
   output_path = "${path.module}/lambda_zip/lambda.zip"
   source_dir  = "${path.module}/lambda"
   excludes    = ["__init__.py", "*.pyc"]
@@ -75,4 +76,11 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   enabled           = true
   batch_size        = 1
   starting_position = "LATEST"
+}
+
+resource "null_resource" "install_python_dependencies" {
+  provisioner "local-exec" {
+    command = "cd ${path.module}/lambda && pip install -r requirements.txt"
+    interpreter = ["PowerShell", "-Command", "bash"]
+  }
 }

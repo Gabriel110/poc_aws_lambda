@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/rest"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "response.json"
+  }
+}

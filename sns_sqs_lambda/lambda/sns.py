@@ -7,6 +7,7 @@ sns = boto3.client('sns', aws_access_key_id="test", aws_secret_access_key="test"
 topic_arn = 'arn:aws:sns:us-east-1:000000000000:sns-lambda-dois'
 
 class Sns:
+
   def send_message(message):
     try:
       response = sns.publish(
@@ -22,3 +23,11 @@ class Sns:
     except Exception as e:
       print('Failed to publish message to SNS topic')
       return {'status': 'error', 'message': str(e)}
+  
+  def enrich_message(message, enrichment):
+    message['nome'] = enrichment
+    return message
+    
+  def json_merge(message, enrichment):
+    message.update(enrichment)
+    return message

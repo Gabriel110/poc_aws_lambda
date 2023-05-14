@@ -18,3 +18,21 @@ services:
     command: "aws configure set aws_access_key_id test
       &&  aws configure set aws_secret_access_key test
       && aws configure set region us-east-1"
+      
+  wiremock:
+    image: wiremock/wiremock:2.32.0
+    container_name: wiremock
+    ports:
+      - "8882:8080"
+    volumes:
+      - ./mocks/__files:/home/wiremock/__files
+      - ./mocks/mappings:/home/wiremock/mappings
+    command:
+      - "--local-response-templating"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+        reservations:
+          memory: 150M
