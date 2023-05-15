@@ -9,6 +9,6 @@ def handler(event, context):
   for record in event['Records']:
     LOGGER.info(record['body'])
     response = Feign.getName()
-    message = Sns.enrich_message(record['body'], response)
+    message = Sns.json_merge(record['body'], response)
     Sns.send_message(message)
   return event
