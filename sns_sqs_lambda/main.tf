@@ -22,7 +22,7 @@ resource "aws_lambda_function" "lambda_function" {
   handler          = "handler.handler"
   role             = aws_iam_role.lambda_assume_role.arn
   runtime          = "python3.8"
-  layers           = [aws_lambda_layer_version.lambda_function_layer.arn]
+  # layers           = [aws_lambda_layer_version.lambda_function_layer.arn]
 
   lifecycle {
     create_before_destroy = true
@@ -36,18 +36,18 @@ data "archive_file" "lambda_zip_file" {
   type        = "zip"
 }
 
-resource "null_resource" "build_lambda_layers" {
-  provisioner "local-exec" {
-    command = "${path.module}/build.sh"
-  }
-}
+# resource "null_resource" "build_lambda_layers" {
+#   provisioner "local-exec" {
+#     command = "${path.module}/build.sh"
+#   }
+# }
 
-resource "aws_lambda_layer_version" "lambda_function_layer" {
-  filename            = data.archive_file.lambda_zip_file.output_path
-  source_code_hash    = data.archive_file.lambda_zip_file.output_base64sha256
-  layer_name          = "lambda-function-layer"
-  compatible_runtimes = ["python3.8", "python3.6", "python3.7"]
-}
+# resource "aws_lambda_layer_version" "lambda_function_layer" {
+#   filename            = data.archive_file.lambda_zip_file.output_path
+#   source_code_hash    = data.archive_file.lambda_zip_file.output_base64sha256
+#   layer_name          = "lambda-function-layer"
+#   compatible_runtimes = ["python3.8", "python3.6", "python3.7"]
+# }
 
 resource "aws_sns_topic" "sns_topic" {
   name = "sns-lambda"

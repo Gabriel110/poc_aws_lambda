@@ -1,6 +1,10 @@
 import json
 import boto3
 import os
+import logging
+
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.INFO)
 
 sns_url = 'http://%s:4566' % os.environ['LOCALSTACK_HOSTNAME']
 sns = boto3.client('sns', aws_access_key_id="test", aws_secret_access_key="test", region_name="us-east-1", endpoint_url=sns_url)
